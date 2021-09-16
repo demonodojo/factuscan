@@ -10,9 +10,17 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
+class BankInvoice < Invoice
 
-one:
-  invoice_date: 2021-09-10
+  def self.is_mine?(ocr_info)
+    ocr_info.search_line("ANOTACION EN CUENTA")
+  end
 
-two:
-  invoice_date: 2021-09-10
+  def calculate_amount
+    self.amount = es_decimal(ocr_info.search_next_line_text('TOTAL'))
+  end
+
+  def check_calculations
+    true
+  end
+end

@@ -1,10 +1,23 @@
+
+
 <p id="notice"><%= notice %></p>
 
 <p>
   <strong>Invoice date:</strong>
   <%= @invoice.invoice_date %>
 </p>
-
+<p>
+  <strong>amount:</strong>
+  <%= @invoice.calculate_amount %>
+</p>
+<p>
+  <strong>amount:</strong>
+  <%= @invoice.check_calculations %>
+</p>
 <%= link_to 'Edit', edit_invoice_path(@invoice) %> |
 <%= link_to 'Back', invoices_path %>
-<%= image_tag(@invoice.image, width: 2000) if @invoice.image.attached? %>
+<%= image_tag(@invoice.image, width: 1000, usemap: '#lines', class: 'map') if @invoice.image.attached? %>
+
+<%== calculate_map('lines', @invoice.ocr_info, 1000) %>
+
+<%= javascript_pack_tag 'invoice' %>

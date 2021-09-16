@@ -31,6 +31,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'aws-sdk'
 gem 'aws-sdk-textract', '~> 1.28'
 gem 'dotenv-rails'
+gem 'mini_magick'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

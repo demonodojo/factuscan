@@ -10,9 +10,13 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
+class NestleInvoice < Invoice
 
-one:
-  invoice_date: 2021-09-10
+  def self.is_mine?(ocr_info)
+    ocr_info.lines[0][:text].start_with?("EMISO") &&  ocr_info.lines[0][:text].end_with?("AGADOR")
+  end
 
-two:
-  invoice_date: 2021-09-10
+  def calculate_amount
+    self.amount = es_decimal(ocr_info.search_next_line_text('TOTAL TRANSFERENCIA'))
+  end
+end

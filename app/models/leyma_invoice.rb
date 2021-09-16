@@ -10,9 +10,16 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
+class LeymaInvoice < Invoice
 
-one:
-  invoice_date: 2021-09-10
+  def self.is_mine?(ocr_info)
+    ocr_info.search_line("LEYMA")
+  end
 
-two:
-  invoice_date: 2021-09-10
+  def calculate_amount
+    ocr_info.using_included do
+      self.amount = es_decimal(ocr_info.search_next_line_text('TOTAL en Euros'))
+    end
+    self.amount
+  end
+end

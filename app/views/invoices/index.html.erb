@@ -11,13 +11,18 @@
   </thead>
 
   <tbody>
-    <% @invoices.each do |invoice| %>
+    <% @invoices.sort_by{ |i| i.image.filename.to_json }.each do |invoice| %>
       <tr>
+        <td><%= invoice.id %></td>
+        <td><%= invoice.image.filename.to_json %></td>
+        <td><%= invoice.type %></td>
         <td><%= invoice.invoice_date %></td>
-        <td><%= link_to 'Show', invoice %></td>
+        <td><%= invoice.calculate_amount %></td>
+        <td><%= invoice.check_calculations %></td>
+        <td><%= link_to 'Show', invoice_path(invoice) %></td>
         <td><%= link_to 'Edit', edit_invoice_path(invoice) %></td>
-        <td><%= link_to 'Destroy', invoice, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <td><%= image_tag(invoice.image, width: 50) if invoice.image.attached? %></td>
+        <td><%= link_to 'Destroy', invoice_path(invoice), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= image_tag(invoice.image, width: 200) if invoice.image.attached? %></td>
       </tr>
     <% end %>
   </tbody>

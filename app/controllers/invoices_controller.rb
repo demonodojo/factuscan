@@ -20,10 +20,27 @@ class InvoicesController < ApplicationController
   def edit
   end
 
-  # POST /invoices or /invoices.json
+  # POST /invoices or /invoices.json when using direct connectior front-s3
+  # def create
+  #   image = params[:image]
+  #   params = invoice_params.except(:image)
+  #   @invoice = Invoice.new(params)
+  #
+  #   respond_to do |format|
+  #     if @invoice.save
+  #       @invoice.image.attach(image) if image.present?
+  #       format.html { redirect_to @invoice, notice: "Invoice was successfully created." }
+  #       format.json { render json: @invoice.as_json(root: false, methods: :image_url).except('updated_at') }
+  #     else
+  #       format.html { render :new, status: :unprocessable_entity }
+  #       format.json { render json: @invoice.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
+
   def create
     image = params[:image]
-    params = invoice_params.except(:image)
+    params = invoice_params
     @invoice = Invoice.new(params)
 
     respond_to do |format|

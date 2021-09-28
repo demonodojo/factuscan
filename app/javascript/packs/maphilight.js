@@ -8,8 +8,7 @@ import 'jquery';
         factory(root.jQuery);
     }
 })(window, function($) {
-    console.log("aaa")
-    var has_VML, has_canvas, create_canvas_for, add_shape_to, clear_canvas, shape_from_area,
+    var has_VML, has_canvas, create_canvas_for, add_shape_to, clear_canvas, shape_from_area, reshape_area,
         canvas_style, hex_to_decimal, css3color, is_image_loaded, options_from_area;
 
     has_canvas = !!document.createElement('canvas').getContext;
@@ -36,7 +35,6 @@ import 'jquery';
             return 'rgba('+hex_to_decimal(color.substr(0,2))+','+hex_to_decimal(color.substr(2,2))+','+hex_to_decimal(color.substr(4,2))+','+opacity+')';
         };
         create_canvas_for = function(img) {
-            console.log('creating canvas')
             var c = $('<canvas style="width:'+$(img).width()+'px;height:'+$(img).height()+'px;"></canvas>').get(0);
             c.getContext("2d").clearRect(0, 0, $(img).width(), $(img).height());
             return c;
@@ -146,32 +144,6 @@ import 'jquery';
         clear_canvas = function(canvas) {
             canvas.getContext('2d').clearRect(0, 0, canvas.width,canvas.height);
         };
-    } else {   // ie executes this code
-        create_canvas_for = function(img) {
-            return $('<var style="zoom:1;overflow:hidden;display:block;width:'+img.width+'px;height:'+img.height+'px;"></var>').get(0);
-        };
-        add_shape_to = function(canvas, shape, coords, options, name) {
-            var fill, stroke, opacity, e;
-            for (var i in coords) { coords[i] = parseInt(coords[i], 10); }
-            fill = '<v:fill color="#'+options.fillColor+'" opacity="'+(options.fill ? options.fillOpacity : 0)+'" />';
-            stroke = (options.stroke ? 'strokeweight="'+options.strokeWidth+'" stroked="t" strokecolor="#'+options.strokeColor+'"' : 'stroked="f"');
-            opacity = '<v:stroke opacity="'+options.strokeOpacity+'"/>';
-            if(shape == 'rect') {
-                e = $('<v:rect name="'+name+'" filled="t" '+stroke+' style="zoom:1;margin:0;padding:0;display:block;position:absolute;left:'+coords[0]+'px;top:'+coords[1]+'px;width:'+(coords[2] - coords[0])+'px;height:'+(coords[3] - coords[1])+'px;"></v:rect>');
-            } else if(shape == 'poly') {
-                e = $('<v:shape name="'+name+'" filled="t" '+stroke+' coordorigin="0,0" coordsize="'+canvas.width+','+canvas.height+'" path="m '+coords[0]+','+coords[1]+' l '+coords.join(',')+' x e" style="zoom:1;margin:0;padding:0;display:block;position:absolute;top:0px;left:0px;width:'+canvas.width+'px;height:'+canvas.height+'px;"></v:shape>');
-            } else if(shape == 'circ') {
-                e = $('<v:oval name="'+name+'" filled="t" '+stroke+' style="zoom:1;margin:0;padding:0;display:block;position:absolute;left:'+(coords[0] - coords[2])+'px;top:'+(coords[1] - coords[2])+'px;width:'+(coords[2]*2)+'px;height:'+(coords[2]*2)+'px;"></v:oval>');
-            }
-            e.get(0).innerHTML = fill+opacity;
-            $(canvas).append(e);
-        };
-        clear_canvas = function(canvas) {
-            // jquery1.8 + ie7
-            var $html = $("<div>" + canvas.innerHTML + "</div>");
-            $html.children('[name=highlighted]').remove();
-            $(canvas).html($html.html());
-        };
     }
 
     shape_from_area = function(area) {
@@ -184,6 +156,13 @@ import 'jquery';
         coords = (area.getAttribute('coords') || '').split(',');
         for (i=0; i < coords.length; i++) { coords[i] = parseFloat(coords[i]); }
         return [shape, coords];
+    };
+
+    reshape_area = function(area, width, height) {
+        var coords = shape_from_area(area)[1]
+        coords[1] = coords[1] * height / width
+        coords[3] = coords[3] * height / width
+        area.setAttribute('coords', coords.join(',') );
     };
 
     options_from_area = function(area, options) {
@@ -245,6 +224,11 @@ import 'jquery';
             }
 
             map = $('map[name="'+usemap.substr(1)+'"]');
+            var width = this.width
+            var height = this.height
+            $(map).find('area[coords]').each(function() {
+                reshape_area(this, width, height);
+            });
 
             if(!(img.is('img,input[type="image"]') && usemap && map.length > 0)) {
                 return;

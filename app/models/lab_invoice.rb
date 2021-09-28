@@ -13,7 +13,7 @@
 class LabInvoice < Invoice
 
   def self.is_mine?(ocr_info)
-    ocr_info.search_line("DATOS REFERENTES A CUOTAS")
+    ocr_info.search_line("DATOS REFERENTES A CUOTAS") && !ocr_info.search_line("Lactalis")
   end
 
   def calculate_amount
@@ -34,5 +34,9 @@ class LabInvoice < Invoice
     rescue
       return false
     end
+  end
+
+  def fat
+    self.amount = es_decimal(ocr_info.search_next_line_text('MG'))
   end
 end

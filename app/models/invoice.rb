@@ -86,10 +86,13 @@ class Invoice < ApplicationRecord
     @ocr_info = OcrInfo.new(self.ocr_data)
   end
 
-  def es_decimal(str)
-    return 0 unless str
-    if str.size >2 && str.rindex('.') == str.size - 3
-      str[str.rindex('.')] = '#'
+  def es_decimal(str_dec)
+    return 0 unless str_dec
+
+    str = str_dec.dup
+    if str.size >2 && (str.rindex('.') == str.size - 3 || str.rindex(',') == str.size - 3)
+      str[str.size - 3] = '#'
+      str = str.gsub('.', '').gsub(',', '')
     end
     str.gsub('.', '').gsub(',', '.').gsub('#', '.').to_d
   end
@@ -104,5 +107,9 @@ class Invoice < ApplicationRecord
 
   def check_calculations
     true
+  end
+
+  def fat
+    0
   end
 end

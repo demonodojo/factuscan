@@ -19,4 +19,9 @@ class PascualInvoice < Invoice
   def calculate_amount
     self.amount = es_decimal(ocr_info.search_next_line_text('TOTAL A PAGAR: (EUROS)'))
   end
+
+  def fat
+    es_decimal(ocr_info.search_next_line_text('MG'))
+  end
+
 end

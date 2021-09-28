@@ -26,4 +26,13 @@ class RoundInvoice < Invoice
     str[str.rindex('.')] = '#' if str.size >2 && str.rindex('.') == str.size - 3
     str.gsub(',', '').gsub('#', '.').to_d
   end
+
+  def fat
+    ocr_info.using_starts_with do
+      amount = ocr_info.search_line_text('GRASA')
+      if amount
+        return es_decimal(amount[5..-1])
+      end
+    end
+  end
 end

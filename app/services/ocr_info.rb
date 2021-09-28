@@ -1,10 +1,11 @@
 class OcrInfo < Object
-  attr_accessor :definition, :match_included, :ends_with
+  attr_accessor :definition, :match_included, :ends_with, :starts_with
 
   def initialize(definition)
     @definition = definition.with_indifferent_access
     @match_included = false
     @ends_with = false
+    @starts_with = false
   end
 
   def search_line(text)
@@ -105,6 +106,7 @@ class OcrInfo < Object
   end
 
   def compare_strings(line_text, text)
+    return line_text.parameterize.start_with? text.parameterize if starts_with
     return line_text.parameterize.end_with? text.parameterize if ends_with
     return line_text.parameterize.include? text.parameterize if match_included
 
@@ -129,6 +131,15 @@ class OcrInfo < Object
     end
   end
 
+  def using_starts_with
+    self.starts_with = true
+    begin
+      yield
+    ensure
+      self.starts_with = false
+    end
+  end
+
   def euclidean_distance(point1, point2)
     # First; group the x's and y's, then sum the squared difference in x's and y's
     Math.sqrt(point1.zip(point2).reduce(0) { |sum, p| sum + (p[0] - p[1]) ** 2 })
@@ -137,6 +148,7 @@ class OcrInfo < Object
   def page
     definition[:page]
   end
+
   def coords(width, line)
     real_width = width * page[:width]
     real_height = width / page[:height]

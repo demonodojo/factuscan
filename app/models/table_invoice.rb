@@ -30,4 +30,13 @@ class TableInvoice < Invoice
     end
     nil
   end
+
+  def fat
+    ocr_info.using_included do
+      amount = ocr_info.search_next_line_text('Materia Grasa')
+      if amount
+        return es_decimal(amount)
+      end
+    end
+  end
 end

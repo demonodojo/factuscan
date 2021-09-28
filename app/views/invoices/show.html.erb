@@ -5,6 +5,8 @@
 <p>
   <strong>Invoice date:</strong>
   <%= @invoice.invoice_date %>
+  <strong>Invoice type:</strong>
+  <%= @invoice.type %>
 </p>
 <p>
   <strong>amount:</strong>
@@ -14,6 +16,14 @@
   <strong>amount:</strong>
   <%= @invoice.check_calculations %>
 </p>
+<table>
+  <tr>
+    <td>Grasa</td>
+  </tr>
+  <tr>
+    <td><%= @invoice.fat %></td>
+  </tr>
+</table>
 <%= link_to 'Edit', edit_invoice_path(@invoice) %> |
 <%= link_to 'Back', invoices_path %>
 <%= image_tag(@invoice.image, width: 1000, usemap: '#lines', class: 'map') if @invoice.image.attached? %>

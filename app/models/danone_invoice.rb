@@ -22,4 +22,9 @@ class DanoneInvoice < Invoice
     end
     self.amount
   end
+
+  def fat
+    perc_decimal(ocr_info.search_next_line_text('%MATERIA GRASA'))
+  end
+
 end

@@ -20,4 +20,8 @@ class CoopInvoice < Invoice
   def calculate_amount
     self.amount = es_decimal(ocr_info.search_below_line_text('TOTAL A PERCIBIR'))
   end
+
+  def fat
+    es_decimal(ocr_info.search_next_line_text('GRASAS'))
+  end
 end

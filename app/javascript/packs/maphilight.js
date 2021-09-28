@@ -11,6 +11,7 @@ import 'jquery';
     var has_VML, has_canvas, create_canvas_for, add_shape_to, clear_canvas, shape_from_area, reshape_area,
         canvas_style, hex_to_decimal, css3color, is_image_loaded, options_from_area;
 
+    var reshaped = false;
     has_canvas = !!document.createElement('canvas').getContext;
 
     // VML: more complex
@@ -226,9 +227,13 @@ import 'jquery';
             map = $('map[name="'+usemap.substr(1)+'"]');
             var width = this.width
             var height = this.height
-            $(map).find('area[coords]').each(function() {
-                reshape_area(this, width, height);
-            });
+            if (!reshaped) {
+                $(map).find('area[coords]').each(function() {
+                    reshape_area(this, width, height);
+                });
+                reshaped = true;
+            }
+
 
             if(!(img.is('img,input[type="image"]') && usemap && map.length > 0)) {
                 return;

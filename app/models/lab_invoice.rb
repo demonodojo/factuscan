@@ -21,7 +21,7 @@ class LabInvoice < Invoice
   end
 
   def calculate_total
-    es_decimal(ocr_info.search_below_line_text('TOTAL (Imp.Incluidos)'))
+    es_decimal(ocr_info.search_below_line_text('Incluidos'))
   end
 
   def calculate_discounts

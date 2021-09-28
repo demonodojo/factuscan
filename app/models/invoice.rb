@@ -97,6 +97,12 @@ class Invoice < ApplicationRecord
     str.gsub('.', '').gsub(',', '.').gsub('#', '.').to_d
   end
 
+  def perc_decimal(str)
+    return 0 unless str
+
+    str.gsub(',', '.').to_d
+  end
+
   def to_s
     "<#{self.class.name} @id='#{id}' @type='#{type}' @invoice_date='#{invoice_date}' >"
   end

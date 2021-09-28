@@ -26,4 +26,8 @@ class AsciiInvoice < Invoice
   def valid?(context = nil)
     super
   end
+
+  def fat
+    perc_decimal(ocr_info.search_next_line_text('M.G.'))
+  end
 end

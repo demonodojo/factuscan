@@ -37,8 +37,9 @@ class OcrInfo < Object
     current_line = lines[index]
     min_top = current_line[:top].to_f + current_line[:height].to_f
     min_left = current_line[:left].to_f
+    max_left = current_line[:left].to_f + current_line[:width].to_f
     rest_lines.each do |line|
-      return line if line[:top].to_f > min_top && line[:left] > min_left
+      return line if line[:top].to_f > min_top && line[:left] > min_left && line[:left] < max_left
     end
     {}
   end
